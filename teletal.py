@@ -4,6 +4,9 @@ import requests
 from bs4 import BeautifulSoup
 from datetime import datetime
 
+def find_uk_grid_elems(tag):
+    return tag.has_attr('uk-grid')
+
 # Function to scrape the URL and extract information
 def scrape_url(ev, het, nap, kod):
     # Construct the URL with the parameters
@@ -16,10 +19,10 @@ def scrape_url(ev, het, nap, kod):
         html_content = response.text
         
         # Parse the HTML using BeautifulSoup
-        soup = BeautifulSoup(html_content, 'html.parser')
+        soup = BeautifulSoup(html_content, 'html5lib')
         
         # Extract valuable information (example: all text inside <div> tags)
-        for div in soup.find_all('div'):
+        for div in soup.find_all(find_uk_grid_elems):
             print(div.get_text(strip=True))
     else:
         print(f"Failed to fetch the URL. Status code: {response.status_code}")
