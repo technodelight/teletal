@@ -42,23 +42,33 @@ def scrape_url(ev, het, nap, kod):
         # Parse the HTML using BeautifulSoup
         soup = BeautifulSoup(html_content, 'html5lib')
         
-        # Extract valuable information (example: all text inside <div> tags)
-        data = []
+        # Initialize the hash for storing data
+        menu_data = {}
+        
+        # Extract valuable information
         for div in soup.find_all(lambda tag: tag.has_attr('uk-grid') and tag.name == 'div'):
             for elem in div.find_all('script'):
                 elem.decompose()
             elems = div.find_all()
-            subdata = []
             if len(elems) >= 1:
-                # print(elems[0].get_text(strip=True), ' ')
-                subdata.append(elems[0].get_text(strip=True))
-            if len(elems) > 1: 
-                # print(elems[1].get_text(strip=True))
-                subdata.append(elems[1].get_text(strip=True))
-            if len(subdata):
-                data.append(subdata)
+                key = elems[0].get_text(strip=True)
+                value = elems[1].get_text(strip=True) if len(elems) > 1 else ""
+                
+                if key == "":
+                    key = "Energia tartalom"
+                # Stop if we reach "Az étkezéshez adott összes étel"
+                if key == "Az étkezéshez adott összes étel:":
+                    break
+                if key == "amelyből":
+                    continue
+                if key == "cukor":
+                    key = "amelyből cukor"
+                if key == "Energia tartalom" and value.endswith("KJ"):
+                    continue
+                    
+                menu_data[key] = value
 
-        print(json.dumps(data))
+        print(json.dumps(menu_data, indent=2, ensure_ascii=False))
     else:
         print(f"Failed to fetch the URL. Status code: {response.status_code}")
 
