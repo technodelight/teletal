@@ -2,3 +2,5 @@
 /lib64
 /lib/
 pyvenv.cfg
+build/
+dist/
