@@ -3,6 +3,7 @@ import argparse
 import requests
 from bs4 import BeautifulSoup
 from datetime import datetime
+import json
 
 # Function to scrape the URL and extract information
 def scrape_url(ev, het, nap, kod):
@@ -34,7 +35,7 @@ def scrape_url(ev, het, nap, kod):
             if len(subdata):
                 data.append(subdata)
 
-        print(data)
+        print(json.dumps(data))
     else:
         print(f"Failed to fetch the URL. Status code: {response.status_code}")
 
