@@ -1,3 +1,4 @@
+#!bin/python
 """Teletal.hu étlap lekérdező modul.
 
 Ez a modul lehetővé teszi a Teletal.hu oldalról való étlap lekérdezést
