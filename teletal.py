@@ -75,18 +75,21 @@ def scrape_url(ev, het, nap, kod):
                 value2 = elems[2].get_text(strip=True) if len(elems) > 2 else ""
                 value3 = elems[3].get_text(strip=True) if len(elems) > 3 else ""
 
-                if key == "":
-                    continue
+                if key == "" or key == "Energiatartalom":
+                    key = "Energia tartalom"
                 if key == "Az étkezéshez adott összes étel:":
                     break
-                if key == "amelyből" or key.startswith("Jelenleg") or key.startswith("Tápanyag"):
+                if key.startswith("amelyből") or key.startswith("Jelenleg") or key.startswith("Tápanyag") or key == "cukor" or key == "telített zsírsavak":
                     continue
-                if key == "cukor":
-                    key = "amelyből cukor"
                 if key == "Energia tartalom" and value.endswith("KJ"):
                     continue
 
+                if key.endswith("amelyből"):
+                    key = key[slice(0, key.index(","))]
+
                 menu_data[key] = value3 if value3 != "" and key != "Energiatartalom" else value2 if value2 != "" else value
+                if key == "Energia tartalom" and menu_data[key] == "":
+                    del menu_data[key]
 
         print(json.dumps(menu_data, indent=2, ensure_ascii=False))
     else:
