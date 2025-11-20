@@ -74,7 +74,7 @@ def scrape_url(ev, het, nap, kod):
                 value = elems[1].get_text(strip=True) if len(elems) > 1 else ""
                 value2 = elems[2].get_text(strip=True) if len(elems) > 2 else ""
                 value3 = elems[3].get_text(strip=True) if len(elems) > 3 else ""
-
+                # print(json.dumps({"key": key, "value": value, "value2": value2, "value3": value3}))
                 if key == "" or key == "Energiatartalom":
                     key = "Energia tartalom"
                 if key == "Az étkezéshez adott összes étel:":
@@ -87,7 +87,7 @@ def scrape_url(ev, het, nap, kod):
                 if key.endswith("amelyből"):
                     key = key[slice(0, key.index(","))]
 
-                menu_data[key] = value3 if value3 != "" and key != "Energiatartalom" else value2 if value2 != "" else value
+                menu_data[key] = value3 if value3 != "" and key != "Energia tartalom" else value2 if value2 != "" and key != "Energia tartalom" else value
                 if key == "Energia tartalom" and menu_data[key] == "":
                     del menu_data[key]
 
