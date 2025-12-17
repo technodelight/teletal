@@ -62,36 +62,7 @@ def scrape_url(ev, het, nap, kod):
 
     if response.status_code == 200:
         html_content = response.text
-        soup = BeautifulSoup(html_content, 'html5lib')
-        menu_data = {}
-
-        for div in soup.find_all(lambda tag: tag.has_attr('uk-grid') and tag.name == 'div'):
-            for elem in div.find_all('script'):
-                elem.decompose()
-            elems = div.find_all()
-            if len(elems) >= 1:
-                key = elems[0].get_text(strip=True)
-                value = elems[1].get_text(strip=True) if len(elems) > 1 else ""
-                value2 = elems[2].get_text(strip=True) if len(elems) > 2 else ""
-                value3 = elems[3].get_text(strip=True) if len(elems) > 3 else ""
-                # print(json.dumps({"key": key, "value": value, "value2": value2, "value3": value3}))
-                if key == "" or key == "Energiatartalom":
-                    key = "Energia tartalom"
-                if key == "Az étkezéshez adott összes étel:":
-                    break
-                if key.startswith("amelyből") or key.startswith("Jelenleg") or key.startswith("Tápanyag") or key == "cukor" or key == "telített zsírsavak":
-                    continue
-                if key == "Energia tartalom" and value.endswith("KJ"):
-                    continue
-
-                if key.endswith("amelyből"):
-                    key = key[slice(0, key.index(","))]
-
-                menu_data[key] = value3 if value3 != "" and key != "Energia tartalom" else value2 if value2 != "" and key != "Energia tartalom" else value
-                if key == "Energia tartalom" and menu_data[key] == "":
-                    del menu_data[key]
-
-        print(json.dumps(menu_data, indent=2, ensure_ascii=False))
+        print(html_content)
     else:
         print(f"Failed to fetch the URL. Status code: {response.status_code}")
 
